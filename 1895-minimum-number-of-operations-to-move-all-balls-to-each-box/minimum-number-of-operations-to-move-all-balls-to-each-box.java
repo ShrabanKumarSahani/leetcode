@@ -2,17 +2,12 @@ class Solution {
     public int[] minOperations(String boxes) {
         int n = boxes.length();
         int[] ans = new int[n];
-        HashSet<Integer> hs = new HashSet<>();
 
         for(int i = 0; i < n; i++) {
             if(boxes.charAt(i) == '1') {
-                hs.add(i);
-            }
-        }
-
-        for(int i = 0; i < n; i++) {
-            for(int index: hs) {
-                ans[i] += Math.abs(i-index);
+                for(int j = 0; j < n; j++) {
+                    ans[j] += Math.abs(j-i);
+                }
             }
         }
 
@@ -20,7 +15,6 @@ class Solution {
     }
 }
 /**
-BRUTE APP - 2 - HASHMAP
+BRUTE FORCE 
 TC = O(n)
-SC = O(n)
- */
+SC = O(1)*/
