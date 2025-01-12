@@ -7,35 +7,35 @@ class Solution {
             return false;
         }
 
-        Stack<Integer> open = new Stack<>();
-        Stack<Integer> openClose = new Stack<>();
-
-        for (int i = 0; i < n; i++) {
-            if (locked.charAt(i) == '0') {
-                openClose.push(i);
-            } else if (s.charAt(i) == '(') {
-                open.push(i);
-            } else if (s.charAt(i) == ')') {
-                if (!open.isEmpty()) { // neutralize
-                    open.pop();
-                } else if (!openClose.isEmpty()) { // openClose can become open and make it valid
-                    openClose.pop();
-                } else { // can't be valid
-                    return false;
-                }
+        // 2 pass -> l to r
+        int open = 0;
+        for(int i = 0; i < n; i++) {
+            if(s.charAt(i) == '(' || locked.charAt(i) == '0') {
+                open++;
+            } else {
+                open--;
+            }
+            if(open < 0) {
+                return false;
             }
         }
 
-        // if elements in both stack left
-        while (!open.isEmpty() && !openClose.isEmpty() && open.peek() < openClose.peek()) {
-            // if open peek index > openClose peek index so it will not able to cancel out
-            open.pop();
-            openClose.pop();
+        // right to left
+        int close = 0;
+        for(int i = n-1; i >= 0; i--) {
+            if(s.charAt(i) == ')' || locked.charAt(i) == '0') {
+                close++;
+            } else {
+                close--;
+            }
+            if(close < 0) {
+                return false;
+            }
         }
 
-        return open.isEmpty();
+        return true;
     }
 }
 /**
 TC - O(n)
-SC - O(n) */
+SC - O(1) */
