@@ -1,18 +1,23 @@
 class Solution {
     public int minimumLength(String s) {       
        int[] freq = new int[26];
-       int deletedChars = 0;
-
        for(char ch : s.toCharArray()) {
             freq[ch - 'a'] += 1;
+       }
 
-            if(freq[ch - 'a'] == 3) {
-                freq[ch - 'a'] -= 2;
-                deletedChars += 2;
+       int ans = 0;
+       for(int i = 0; i < 26; i++) {
+            if(freq[i] == 0)
+                continue;
+            // if no of chars is odd then after deletion only 1 will be left and incase of even it will be 2
+            if(freq[i] % 2 == 0) {
+                ans += 2;           
+            } else {
+                ans += 1;
             }
        }
 
-       return s.length() - deletedChars;
+       return ans;
     }
 }
 /**
