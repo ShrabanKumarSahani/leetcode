@@ -2,20 +2,18 @@ class Solution {
     public int[] findThePrefixCommonArray(int[] A, int[] B) {
         int n = A.length;
         int[] ans = new int[n];
-
-        boolean[] isPresentA = new boolean[n+1];
-        boolean[] isPresentB = new boolean[n+1];
-
+        HashMap<Integer, Integer> hs = new HashMap<>();
+        int count = 0;
         for(int i = 0; i < n; i++) {
-            isPresentA[A[i]] = true;
-            isPresentB[B[i]] = true;
-            int count = 0;
-            for(int x = 1; x <= n; x++) {
-                if(isPresentA[x] == true && isPresentB[x] == true) {
-                    count++;
-                }
+            hs.put(A[i], hs.getOrDefault(A[i], 0) + 1);
+            if(hs.get(A[i]) == 2) {
+                count++;
             }
 
+            hs.put(B[i], hs.getOrDefault(B[i], 0) + 1);
+            if(hs.get(B[i]) == 2) {
+                count++;
+            }
             ans[i] = count;  
         }
         return ans;
@@ -23,5 +21,5 @@ class Solution {
 }
 /**
 BRUTE FORCE
-TC = O(n^2)
+TC = O(n)
 SC = O(n) */
