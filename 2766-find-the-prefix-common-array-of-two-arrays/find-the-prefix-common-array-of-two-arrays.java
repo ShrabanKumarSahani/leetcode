@@ -20,4 +20,4 @@ class Solution {
 /**
 BRUTE FORCE
 TC = O(n^3)
-SC = O(n) */
+SC = O(1) */
