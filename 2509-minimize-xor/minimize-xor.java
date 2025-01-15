@@ -1,25 +1,21 @@
 class Solution {
     public int minimizeXor(int num1, int num2) {
-        int ans = num1;
-        int reqdSetBitCount = Integer.bitCount(num2);
-        int currSetBitCount = Integer.bitCount(ans);
-        int bit = 0;
+        int ans = 0;
+        int reqdSetBitCount = Integer.bitCount(num2);   // log(n)
 
-        if(currSetBitCount < reqdSetBitCount) {
-            while(currSetBitCount < reqdSetBitCount) {
-                if(!isSet(ans, bit)) {
-                    ans = setBit(ans, bit);
-                    currSetBitCount++;
-                }
-                bit++;
+        // Setting bits
+        for(int bit = 31; bit >= 0 && reqdSetBitCount > 0; bit--) {
+            if(isSet(num1, bit)) {
+                ans |= (1 << bit);
+                reqdSetBitCount--;
             }
-        } else if(currSetBitCount > reqdSetBitCount) {
-            while(currSetBitCount > reqdSetBitCount) {
-                if(isSet(ans, bit)) {
-                    ans = unsetBit(ans, bit);
-                    currSetBitCount--;
-                }
-                bit++;
+        }
+
+        // Unsetting bits
+        for(int bit = 0; bit < 32 && reqdSetBitCount > 0; bit++) {
+            if(isUnSet(num1, bit)) {
+                ans |= (1 << bit);
+                reqdSetBitCount--;
             }
         }
 
@@ -31,14 +27,10 @@ class Solution {
         return (ans & (1<<bit)) != 0;
     }
 
-    public int setBit(int ans, int bit) {
-        return ans | (1 << bit);
-    }
-
-    public int unsetBit(int ans, int bit) {
-        return ans & ~(1 << bit);
+    public boolean isUnSet(int ans, int bit) {
+        return (ans & (1 << bit)) == 0;
     }
 }
 /**
-TC = O(nlogn)
+TC = O(logn)
 SC = O(1) */
