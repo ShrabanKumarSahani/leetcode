@@ -2,36 +2,39 @@ class Solution {
     public int firstCompleteIndex(int[] arr, int[][] mat) {
         int m = mat.length;     // columns
         int n = mat[0].length;  // rows
-        Map<Integer, int[]> mp = new HashMap<>();   // storing {cell value, {i,j}}
-
-        for(int i = 0; i < m; i++) {
-            for(int j = 0; j < n; j++) {
-                int val = mat[i][j];
-                mp.put(val, new int[]{i, j});
-            }
-        }
-
-        int[] countRowsPaint = new int[m];
-        int[] countColumnsPaint = new int[n];
+        Map<Integer, Integer> mp = new HashMap<>();   // storing {cell value, {i,j}}
+        int minIndex = Integer.MAX_VALUE;
 
         for(int i = 0; i < arr.length; i++) {
-            int value = arr[i];
-            int[] coordinates = mp.get(value);
-            int row = coordinates[0];
-            int col = coordinates[1];
-
-            countRowsPaint[row]++;
-            countColumnsPaint[col]++;
-
-            if(countRowsPaint[row] == n || countColumnsPaint[col] == m) {
-                return i;
-            }
+            mp.put(arr[i], i);
         }
 
-        return -1;
+        // checking each row one by one
+        for(int row = 0; row < m; row++) {
+            int lastIndex = Integer.MIN_VALUE;  // last index when row will be completely painted
+            for(int col = 0; col < n; col++) {
+                int value = mat[row][col];
+                int index = mp.get(value);
+                lastIndex = Math.max(lastIndex, index);
+            }
+            minIndex = Math.min(minIndex, lastIndex);
+        }
+
+        // checking each column one by one
+        for(int col = 0; col < n; col++) {
+            int lastIndex = Integer.MIN_VALUE;  // last index when row will be completely painted
+            for(int row = 0; row < m; row++) {
+                int value = mat[row][col];
+                int index = mp.get(value);
+                lastIndex = Math.max(lastIndex, index);
+            }
+            minIndex = Math.min(minIndex, lastIndex);
+        }
+
+        return minIndex;
     }
 }
 /**
 BRUTE FORCE
 TC = O(m*n)
-SC = O(m*n)[map] + O(m+n) [count arr]*/
+SC = O(m*n)*/
