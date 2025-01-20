@@ -1,7 +1,7 @@
 class Solution {
     public int firstCompleteIndex(int[] arr, int[][] mat) {
-        int m = mat.length;
-        int n = mat[0].length;
+        int m = mat.length;     // columns
+        int n = mat[0].length;  // rows
         Map<Integer, int[]> mp = new HashMap<>();   // storing {cell value, {i,j}}
 
         for(int i = 0; i < m; i++) {
@@ -11,40 +11,27 @@ class Solution {
             }
         }
 
+        int[] countRowsPaint = new int[m];
+        int[] countColumnsPaint = new int[n];
+
         for(int i = 0; i < arr.length; i++) {
             int value = arr[i];
             int[] coordinates = mp.get(value);
             int row = coordinates[0];
             int col = coordinates[1];
-            mat[row][col] *= -1;    // painted
 
-            if(checkRowPainted(mat, row) || checkColumnPainted(mat, col)) {
+            countRowsPaint[row]++;
+            countColumnsPaint[col]++;
+
+            if(countRowsPaint[row] == n || countColumnsPaint[col] == m) {
                 return i;
             }
         }
 
         return -1;
     }
-
-    private boolean checkRowPainted(int[][] mat, int row) {
-        for(int col = 0; col < mat[0].length; col++) {
-            if(mat[row][col] > 0) {         // some row's cell not painted
-                return false;
-            }
-        }
-        return true;
-    }
-
-    private boolean checkColumnPainted(int[][] mat, int col) {
-        for(int row = 0; row < mat.length; row++) {
-            if(mat[row][col] > 0) {       // some column's cell not painted
-                return false;
-            }
-        }
-        return true;
-    }
 }
 /**
 BRUTE FORCE
-TC = O((m*n) * s(m*n))
-SC = O(m*n) */
+TC = O(m*n)
+SC = O(m*n)[map] + O(m+n) [count arr]*/
