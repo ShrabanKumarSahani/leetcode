@@ -1,34 +1,47 @@
 class Solution {
     public int[][] highestPeak(int[][] isWater) {
-        final int[][] dirs = { { 0, 1 }, { 1, 0 }, { 0, -1 }, { -1, 0 } };
-        final int m = isWater.length;
-        final int n = isWater[0].length;
-        int[][] ans = new int[m][n];
-        Arrays.stream(ans).forEach(A -> Arrays.fill(A, -1));
-        Queue<Pair<Integer, Integer>> q = new ArrayDeque<>();
+        int m = isWater.length;
+        int n = isWater[0].length;
+        int[][] height = new int[m][n];
+        Queue<int[]> q = new LinkedList<>();
 
-        for (int i = 0; i < m; ++i)
-            for (int j = 0; j < n; ++j)
+        // initializing the queue with all water cells and setting their height to 0
+        for (int i = 0; i < m; i++) {
+            for (int j = 0; j < n; j++) {
                 if (isWater[i][j] == 1) {
-                    q.offer(new Pair<>(i, j));
-                    ans[i][j] = 0;
+                    q.offer(new int[] { i, j });
+                    height[i][j] = 0;
+                } else {
+                    height[i][j] = -1; // mark unvisited land cells
                 }
-
-        while (!q.isEmpty()) {
-            final int i = q.peek().getKey();
-            final int j = q.poll().getValue();
-            for (int[] dir : dirs) {
-                final int x = i + dir[0];
-                final int y = j + dir[1];
-                if (x < 0 || x == m || y < 0 || y == n)
-                    continue;
-                if (ans[x][y] != -1)
-                    continue;
-                ans[x][y] = ans[i][j] + 1;
-                q.offer(new Pair<>(x, y));
             }
         }
 
-        return ans;
+        // multi source BFS
+        int[][] directions = { { -1, 0 }, { 1, 0 }, { 0, -1 }, { 0, 1 } };
+
+        while (!q.isEmpty()) {
+            int ns = q.size();
+            while(ns-- > 0) {
+                int[] curr = q.poll();
+                int i = curr[0];
+                int j = curr[1];
+
+                for(int[] d : directions) {
+                    int new_i = i + d[0];
+                    int new_j = j + d[1];
+
+                    if(new_i >= 0 && new_i < m && new_j >= 0 && new_j < n && height[new_i][new_j] == -1) {
+                        height[new_i][new_j] = height[i][j] + 1;
+                        q.offer(new int[]{new_i, new_j});
+                    }
+                }
+            }
+        }
+        return height;
     }
 }
+/**
+TC = O(m*n)
+SC = O(m*n)
+ */
