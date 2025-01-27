@@ -1,38 +1,48 @@
 class Solution {
     public List<Boolean> checkIfPrerequisite(int numCourses, int[][] prerequisites, int[][] queries) {
-        Map<Integer, List<Integer>> adj = new HashMap<>();
-        for(int[] edge : prerequisites) {
-            int u = edge[0];
-            int v = edge[1];
-            adj.computeIfAbsent(u, k -> new ArrayList<>()).add(v);   // u -> v
+        Map<Integer, List<Integer>> adjList = new HashMap<>();
+        for (int[] edge : prerequisites) {
+            adjList.computeIfAbsent(edge[0], k -> new ArrayList<>()).add(edge[1]);
         }
 
-        int Q = queries.length;
-        List<Boolean> res = new ArrayList<>(Q);
+        boolean[][] isPrerequisite = new boolean[numCourses][numCourses];
+        preprocess(numCourses, adjList, isPrerequisite);
 
-        for(int i = 0; i < Q; i++) {
-            int u = queries[i][0];
-            int v = queries[i][1];
-
-            boolean[] visited = new boolean[numCourses];
-            res.add(dfs(adj, u, v, visited));
+        List<Boolean> res = new ArrayList<>();
+        for (int[] q : queries) {
+            res.add(isPrerequisite[q[0]][q[1]]);
         }
 
         return res;
     }
 
-    private boolean dfs(Map<Integer, List<Integer>> adj, int src, int dest, boolean[] visited) {
-        visited[src] = true;
-        if(src == dest) {
-            return true;
-        }
-
-        boolean isReachable = false;
-        for(int adjNode : adj.getOrDefault(src, new ArrayList<>())) {
-            if(!visited[adjNode]) {
-                isReachable = isReachable || dfs(adj, adjNode, dest, visited);
+    private void preprocess(int numCourses, Map<Integer, List<Integer>> adjList, 
+    boolean[][] isPrerequisite) {
+        for(int i = 0; i < numCourses; i++) {
+            for(int j = 0; j < numCourses; j++) {
+                if(i != j ){
+                    boolean[] visited = new boolean[numCourses];
+                    if(dfs(adjList, visited, i, j)) {
+                        isPrerequisite[i][j] = true;
+                    }
+                }
             }
         }
-        return isReachable;
+    }
+
+    private boolean dfs(Map<Integer, List<Integer>> adjList, boolean[] visited, int src, int target) {
+        visited[src] = true;
+        if (src == target) {
+            return true;
+        }
+        for (int adjNode : adjList.getOrDefault(src, new ArrayList<>())) {
+            if (!visited[adjNode] && dfs(adjList, visited, adjNode, target)) {
+                return true;
+            }
+        }
+        return false;
     }
 }
+/**
+TC = O(V^2 + (V+E))
+SC = O(V+E) */
