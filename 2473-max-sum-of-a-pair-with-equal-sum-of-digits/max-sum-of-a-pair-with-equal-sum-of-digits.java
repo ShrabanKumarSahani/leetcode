@@ -12,14 +12,14 @@ class Solution {
         int n = nums.length;
         int ans = -1;
 
-        Map<Integer, Integer> mp = new HashMap<>();
+        int[] mp = new int[82];
 
         for(int i = 0; i < n; i++) {
             int digitSum = getDigitSum(nums[i]);
-            if(mp.containsKey(digitSum)) {
-                ans = Math.max(ans, mp.get(digitSum) + nums[i]);
+            if(mp[digitSum] > 0) {
+                ans = Math.max(ans, mp[digitSum] + nums[i]);
             }
-            mp.put(digitSum, Math.max(nums[i], mp.getOrDefault(digitSum, 0))); 
+            mp[digitSum] =  Math.max(nums[i], mp[digitSum]); 
         }
 
         return ans;
@@ -28,4 +28,6 @@ class Solution {
 /**
  TC = O(n*m)
  SC = O(n)
+
+ nums[i] <= 10^9 -> max sum = 9...9times = 81 + 1(10^9) = 82
  */
