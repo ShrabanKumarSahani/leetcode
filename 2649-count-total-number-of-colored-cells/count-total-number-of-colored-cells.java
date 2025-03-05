@@ -1,16 +1,8 @@
 class Solution {
     public long coloredCells(int n) {
-        long ans = 1;
-        long x = 4;
-        n--;
-        while(n > 0) {
-            ans += x;
-            x += 4;
-            n--;
-        }
-        return ans;
+        return 1 + (long) 2 * (n-1) * n;
     }
 }
 /**
-TC = O(n)
+TC = O(1)
 SC = O(1) */
