@@ -18,7 +18,7 @@ class Solution {
     public boolean isPossible(int[] ranks, long mid, int cars) {
         long carsRepair = 0;
         for(int rank : ranks) {
-            carsRepair += Math.sqrt(mid/rank); 
+            carsRepair += Math.sqrt(1.0 * mid/rank); 
         }
         return carsRepair >= cars;
     }
