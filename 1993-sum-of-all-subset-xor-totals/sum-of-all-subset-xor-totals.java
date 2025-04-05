@@ -1,19 +1,12 @@
 class Solution {
     public int subsetXORSum(int[] nums) {
-        return solve(nums, 0, 0);
-    }
-
-    private int solve(int[] nums, int i, int XOR) {
-        if(i == nums.length) {
-            return XOR;
+        int ans = 0; 
+        for(int num : nums) {
+            ans |= num;
         }
-
-        int include = solve(nums, i+1, XOR^nums[i]);
-        int exclude = solve(nums, i+1, XOR);
-
-        return include + exclude;
+        return ans << (nums.length -1);
     }
 }
 /**
-TC = O(2^n)
-SC = O(n) */
+TC = O(n)
+SC = O(1) */
