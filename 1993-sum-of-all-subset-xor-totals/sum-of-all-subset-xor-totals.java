@@ -1,33 +1,19 @@
 class Solution {
     public int subsetXORSum(int[] nums) {
-        List<List<Integer>> subsets = new ArrayList<>();
-        List<Integer> currSubset = new ArrayList<>();
-        solve(nums, 0, currSubset, subsets);
-
-        int ans = 0;
-        for(List<Integer> subset : subsets) {
-            int xor = 0;
-            for(int num : subset) {
-                xor ^= num;
-            }
-            ans += xor;
-        }
-
-        return ans;
+        return solve(nums, 0, 0);
     }
 
-    void solve(int[] nums, int i, List<Integer> currSubset, List<List<Integer>> subsets) {
+    private int solve(int[] nums, int i, int XOR) {
         if(i == nums.length) {
-            subsets.add(new ArrayList<>(currSubset));
-            return;
+            return XOR;
         }
 
-        currSubset.add(nums[i]);
-        solve(nums, i+1, currSubset, subsets);
-        currSubset.remove(currSubset.size() - 1);
-        solve(nums, i+1, currSubset, subsets);
+        int include = solve(nums, i+1, XOR^nums[i]);
+        int exclude = solve(nums, i+1, XOR);
+
+        return include + exclude;
     }
 }
 /**
-TC = O(2^n * n)
-SC = O(n * 2^n) */
+TC = O(2^n)
+SC = O(n) */
