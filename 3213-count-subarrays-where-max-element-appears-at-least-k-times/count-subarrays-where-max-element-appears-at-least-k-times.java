@@ -2,30 +2,23 @@ class Solution {
     public long countSubarrays(int[] nums, int k) {
         int maxE = Arrays.stream(nums).max().getAsInt();
         int n = nums.length;
-        int i = 0, j = 0;
-
         long ans = 0;
-        int countMax = 0;
+        List<Integer> maxIndices = new ArrayList<>();
 
-        while(j < n) {
-            if(nums[j] == maxE) {
-                countMax++;
+        for(int i = 0; i < n; i++) {
+            if(nums[i] == maxE) {
+                maxIndices.add(i);
             }
 
-            while(countMax >= k) {
-                ans += n - j;
-                if(nums[i] == maxE) {
-                    countMax--;
-                }
-                i++;
+            int size = maxIndices.size();
+            if(size >= k) {
+                int lastIdx = maxIndices.get(size-k);
+                ans += lastIdx + 1;
             }
-
-            j++;
         }
-
         return ans;
     }
 }
 /**
 TC = O(n)
-SC = O(1) */
+SC = O(n) */
