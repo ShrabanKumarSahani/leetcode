@@ -1,28 +1,20 @@
 class Solution {
     public int[][] divideArray(int[] nums, int k) {
-        // sorting the array to get increasing array to ease the diff of k check
+        int n = nums.length;
+        int[][] ans = new int[n/3][3];
         Arrays.sort(nums);
-        int m = nums.length;
-        // a list to store the valid triplets 
-        List<int[]> ansList = new ArrayList<>();
+        int idx = 0;
 
-        for (int i = 2; i < m; i += 3) {
-            // if diff of nums[i] & nums[i-2] is <= k then only we will add;
-            if (nums[i] - nums[i - 2] > k) {
-                return new int[0][];
+        for(int i = 0; i <= n-3; i += 3) {
+            if(nums[i+2] - nums[i] > k) {
+                return new int[0][0];
             }
-            ansList.add(new int[] { nums[i - 2], nums[i-1], nums[i] });
+            ans[idx++] = new int[]{nums[i], nums[i+1], nums[i+2]};
         }
 
-        int[][] ans = new int[ansList.size()][3];
-        for (int i = 0; i < ansList.size(); i++) {
-            ans[i] = ansList.get(i);
-        }
         return ans;
     }
 }
-
 /**
-TC = O(m-2)*(no of triplets)
-SC = O(no.of.triplets)
- */
+TC = O(nlogn)
+SC = O(1) */
