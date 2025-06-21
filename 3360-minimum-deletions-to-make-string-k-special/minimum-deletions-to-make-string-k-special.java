@@ -10,15 +10,17 @@ class Solution {
         int cummDeletedElements = 0;
 
         for(int i = 0; i < 26; i++) {
+            int minFreq = freq[i];
             int del = cummDeletedElements;
+
             for(int j = 25; j >= 0; j--) {
                 if(freq[j] - freq[i] <= k) 
                     break;
-                del += freq[j] - freq[i] - k;
+                del += freq[j] - minFreq - k;
             }
 
             ans = Math.min(ans, del);
-            cummDeletedElements += freq[i];
+            cummDeletedElements += minFreq;
         }
 
         return ans;
