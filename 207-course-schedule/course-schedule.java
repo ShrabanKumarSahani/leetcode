@@ -1,47 +1,37 @@
 class Solution {
     public boolean canFinish(int numCourses, int[][] prerequisites) {
-        List<Integer>[] graph = new List[numCourses];
-        Arrays.setAll(graph, index -> new ArrayList<>());
-
-        // tracking indegree of each course
-        int[] indegree = new int[numCourses];
-
-        // building graph and calculating indegrees
-        // [a,b] : course a depends on course b, b -> a
-        for(int[] prerequisite : prerequisites) {
-            int course = prerequisite[0];
-            int prerequisiteCourse = prerequisite[1];
-            graph[prerequisiteCourse].add(course);
-            indegree[course]++;
+        List<List<Integer>> adj = new ArrayList<>();
+        
+        for(int i = 0; i < numCourses; i++) {
+            adj.add(new ArrayList<>());
         }
 
-        // queue for storing courses with no prerequisites(indegree = 0)
-        Deque<Integer> q = new ArrayDeque<>();
+        int[] indegree = new int[numCourses];
+        for(int[] pre : prerequisites) {
+            adj.get(pre[1]).add(pre[0]);
+            indegree[pre[0]]++;
+        }
 
-        // adding all courses with no prerequisites into queue
-        for(int c = 0; c < numCourses; c++) {
-            if(indegree[c] == 0) {
-                q.offer(c);
+        Queue<Integer> q = new LinkedList<>();
+        for(int i = 0; i < numCourses; i++) {
+            if(indegree[i] == 0) {
+                q.add(i);
             }
         }
 
-        // processing courses with kahn's algo(topological sort)
+        int count = 0;
         while(!q.isEmpty()) {
-            int currCourse = q.poll();  // course with no remaning prereq.
-            numCourses--;               // decrement count of remain. courses to process
+            int course = q.poll();
+            count++;
 
-            // for each course that depend on curr course
-            for(int dependCourse : graph[currCourse]) {
-                indegree[dependCourse]--;       // reducing it's indegree since we completed one indegree
-                if(indegree[dependCourse] == 0) {   // if all prerequisites are met, adding to queue
-                    q.offer(dependCourse);
+            for(int next: adj.get(course)){
+                indegree[next]--;
+                if(indegree[next] == 0) {
+                    q.add(next);
                 }
             }
         }
 
-        return numCourses == 0; //all courses processed, no cycle exists
+        return count == numCourses;
     }
 }
-/**
-TC = O(m+n) -> O(n) = queue, O(m) = prequisites iterate
-SC = O(n+m) -> graph = O(n+n), indegree arr = O(n), queue = O(n) */
