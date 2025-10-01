@@ -1,14 +1,18 @@
 class Solution {
     public int numWaterBottles(int numBottles, int numExchange) {
-        int consumed = 0;
-        while(numBottles >= numExchange) {
-            consumed += numExchange;
-            numBottles -= numExchange;
-            numBottles += 1;
+        int emptybottles = numBottles;
+        int consumed = numBottles;
+
+        while(emptybottles >= numExchange) {
+            int extraBottles = emptybottles/numExchange;
+            int remain = emptybottles%numExchange;
+            consumed += extraBottles;
+            emptybottles = extraBottles + remain;
         }
-        return numBottles + consumed;
+
+        return consumed;
     }
 }
 /**
-TC = O(numBottles)
+TC = O(log(numExchange))
 SC = O(1) */
